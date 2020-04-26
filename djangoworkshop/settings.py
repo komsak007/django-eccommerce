@@ -95,7 +95,7 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.config(default='postgres://nvzzvqlrgwlczn:5a4b865d82bbdd6704d0ee60e832b68fbb7317ce19ae1851f81ec9e565d67ffa@ec2-52-6-143-153.compute-1.amazonaws.com:5432/dc69srlhq7sj25'}
+DATABASES['default'] = dj_database_url.config(default='postgres://nvzzvqlrgwlczn:5a4b865d82bbdd6704d0ee60e832b68fbb7317ce19ae1851f81ec9e565d67ffa@ec2-52-6-143-153.compute-1.amazonaws.com:5432/dc69srlhq7sj25')
 
 
 # Password validation
