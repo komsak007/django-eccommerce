@@ -1,10 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from store.models import Category, Product, Cart, CartItem
-from store.form import SignUpForm
+from .models import Category, Product, Cart, CartItem, Order,OrderItem
+from .form import SignUpForm
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.core.paginator import Paginator,EmptyPage,InvalidPage
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+import stripe
 # Create your views here.
 def index(request,category_slug=None):
     products=None
@@ -38,7 +41,7 @@ def _cart_id(request):
     if not cart:
         cart = request.session.create()
     return cart
-
+@login_required(login_url='signIn')
 def addCart(request,product_id):
     #ดึงสินค้าที่เราซื้อมาใช้งาน
     product = Product.objects.get(id=product_id)
@@ -76,8 +79,59 @@ def cartdetail(request):
             counter+=item.quantity
     except Exception as e:
         pass
+    stripe.api_key=settings.SECRET_KEY
+    stripe_total=int(total*100)
+    description="Payment Online"
+    data_key=settings.PUBLIC_KEY
+
+    if request.method == "POST":
+        try :
+            token = request.POST['stripeToken']
+            email = request.POST['stripeEmail']
+            name = request.POST['stripeBillingName']
+            address = request.POST['stripeBillingAddressLine1']
+            city = request.POST['stripeBillingAddressCity']
+            postcode = request.POST['stripeShippingAddressZip']
+            customer = stripe.Customer.create(
+                email=email,
+                source=token
+            )
+            charge = stripe.Charge.create(
+                amount=stripe_total,
+                currency='thb',
+                description=description,
+                customer=customer.id
+            )
+            order=Order.objects.create(
+                name=name,
+                address=address,
+                city=city,
+                postcode=postcode,
+                total=total,
+                email=email,
+                token=token
+            )
+            order.save()
+            for item in cart_item :
+                order_item=OrderItem.objects.create(
+                    product=item.product.name,
+                    quantity=item.quantity,
+                    price=item.product.price,
+                    order=order
+                 )
+                order_item.save()
+
+                product=Product.objects.get(id=item.product.id)
+                product.stock=int(item.product.stock-order_item.quantity)
+                product.save()
+                item.delete()
+            return redirect('home')
+        except stripe.error.CardError as e :
+            return False,e
+
     return render(request,'cartdetail.html',
-                  dict(cart_item=cart_item,total=total,counter=counter))
+                  dict(cart_item=cart_item,total=total,counter=counter,
+                       data_key=data_key,stripe_total=stripe_total,description=description))
 
 def removeCart(request,product_id):
     cart=Cart.objects.get(cart_id=_cart_id(request))

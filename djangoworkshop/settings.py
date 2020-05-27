@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import dj_database_url
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_luo+d+fum^r!i0@(tor9e5x88iu5b&a+7v#0ld+*(f**pw0$s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 STATIC_URL='/static/'
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'django.contrib.humanize',
-    'crispy_forms'
+    'crispy_forms',
+    'stripe'
 ]
 
 MIDDLEWARE = [
@@ -95,11 +96,10 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.config(default='postgres://nvzzvqlrgwlczn:5a4b865d82bbdd6704d0ee60e832b68fbb7317ce19ae1851f81ec9e565d67ffa@ec2-52-6-143-153.compute-1.amazonaws.com:5432/dc69srlhq7sj25')
 
 
 # Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validat
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -136,3 +136,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+PUBLIC_KEY='pk_test_GtL01jH5r3fklWE7eQhB0Dgn00JuB4BLrN'
+SECRET_KEY='sk_test_kQ94wVqfraY7WKuD7eTWIrOo00lidLVjU7'

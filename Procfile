@@ -1,1 +1,1 @@
-web: gunicorn djangoworkshop.wsgi --log-file -
+web: python manage.py collectstatic --no-input; gunicorn djangoworkshop.wsgi --log-file - --log-level debug

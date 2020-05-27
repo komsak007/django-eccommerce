@@ -48,6 +48,21 @@
         </table>
     </div>
          <h4 class="text-right">ยอดชำระเงิน {{total|intcomma}} บาท</h4>
+            <form class="" action="" method="POST">
+            {% csrf_token %}
+            <script src="https://checkout.stripe.com/checkout.js"
+            class="stripe-button"
+            data-key="{{ data_key }}"
+            data-amount="{{ stripe_total }}"
+            data-name="Kong-Shop"
+            data-description="{{ description }}"
+            data-locale="Thailand"
+            data-currency="thb"
+            data-shipping-address="true"
+            data-billing-address="true"
+            data-zip-code="true">
+            </script>
+            </form>
    {% endif %}
 </div>
 
