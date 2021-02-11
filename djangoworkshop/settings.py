@@ -24,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_luo+d+fum^r!i0@(tor9e5x88iu5b&a+7v#0ld+*(f**pw0$s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'e-comerrce-django.herokuapp.com']
 
 STATIC_URL='/static/'
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
