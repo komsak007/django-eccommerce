@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Category, Product, Cart, CartItem, Order,OrderItem
-from .form import SignUpForm
+from .form import SignUpForm,changepassword
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
@@ -177,3 +177,14 @@ def signOutView(request):
 def search(request):
     products=Product.objects.filter(name__contains=request.GET['title'])
     return render(request,"index.html",{'products':products})
+
+def changpassword(request,id):
+    persons = User.objects.get(id=id)
+    if request.method == 'POST':
+        form = changepassword(request.POST, instance=persons)
+        if form.is_valid():
+            password1 = request.POST['password1']
+            password2 = request.POST['password2']
+            if password1 == password2:
+                form.save()
+    return render(request,'changpassword.html',dict(form=form,persons=persons))

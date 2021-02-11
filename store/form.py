@@ -9,3 +9,7 @@ class SignUpForm(UserCreationForm):
     class Meta :
         model = User
         fields = ('first_name', 'last_name', 'username','email', 'password1','password2')
+
+class changepassword(forms.ModelForm):
+    password1 = forms.CharField(max_length=100,required=True)
+    password2 = forms.CharField(max_length=100,required=True)
